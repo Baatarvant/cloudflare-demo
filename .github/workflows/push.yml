@@ -1,20 +1,19 @@
-name: Deploy
-
-on: push
+on: [push]
 
 jobs:
   deploy:
-    name: Deploy
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: read
+      deployments: write
+    name: Deploy to Cloudflare Pages
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@1
+      - name: Publish
+        uses: cloudflare/pages-action@v1
         with:
           apiToken: 8V5n4-D9Ijd8AT-9IywmE18L7sMa6CiW9UPT9oy0
           accountId: 36d2783af26b0bf9ea55ca184527e99f
           projectName: my-next-app
-          directory: .vercel/output/static
+          directory: .next
