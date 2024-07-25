@@ -1,42 +1,20 @@
-name: Deploy to Cloudflare Pages
-on:
-  push:
-    branches:
-      - main
+name: Deploy
+
+on: push
 
 jobs:
-  build:
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
-    environment: devbuild
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: "20"
-
-      - name: Install pnpm
-        run: npm install -g pnpm
-
-      - name: Install dependencies
-        working-directory: ./apps/dashboard
-        run: pnpm install
-
-      - name: Build project
-        working-directory: ./apps/dashboard
-        run: pnpm run build
-
-      - name: Export project
-        working-directory: ./apps/dashboard
-        run: pnpm run export
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Deploy to Cloudflare Pages
-        env:
-          CLOUDFLARE_API_TOKEN: 8V5n4-D9Ijd8AT-9IywmE18L7sMa6CiW9UPT9oy0
-          CLOUDFLARE_ACCOUNT_ID: 36d2783af26b0bf9ea55ca184527e99f
-          CLOUDFLARE_PROJECT_NAME: my-next-app
-        run: |
-          npx wrangler pages publish ./apps/dashboard/out --project-name=$CLOUDFLARE_PROJECT_NAME --branch=main
+        uses: cloudflare/pages-action@1
+        with:
+          apiToken: 8V5n4-D9Ijd8AT-9IywmE18L7sMa6CiW9UPT9oy0
+          accountId: 36d2783af26b0bf9ea55ca184527e99f
+          projectName: my-next-app
+          directory: .vercel/output/static
